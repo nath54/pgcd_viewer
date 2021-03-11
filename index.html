@@ -68,7 +68,6 @@
         var tc = parseInt(document.getElementById("tc").value);
         var cl_bge = document.getElementById("cl_bg").value;
         var cl_c = document.getElementById("cl_case").value;
-        console.log(cl_bg, cl_cas);
         var itx = tx * tc;
         var ity = ty * tc;
         var maxe = tx;
@@ -96,7 +95,7 @@
                         c.r = 255;
                     }
                 } else {
-                    c.r = cl_bg.r - parseInt((cl_cas.r - cl_bg.r) * p);
+                    c.r = cl_bg.r - parseInt((-cl_cas.r + cl_bg.r) * p);
                     if (c.r < 0) {
                         c.r = 0;
                     }
@@ -107,7 +106,7 @@
                         c.g = 255;
                     }
                 } else {
-                    c.g = cl_bg.g - parseInt((cl_cas.g - cl_bg.g) * p);
+                    c.g = cl_bg.g - parseInt((-cl_cas.g + cl_bg.g) * p);
                     if (c.g < 0) {
                         c.g = 0;
                     }
@@ -118,7 +117,7 @@
                         c.b = 255;
                     }
                 } else {
-                    c.b = cl_bg.b - parseInt((cl_cas.b - cl_bg.b) * p);
+                    c.b = cl_bg.b - parseInt((-cl_cas.b + cl_bg.b) * p);
                     if (c.b < 0) {
                         c.b = 0;
                     }
