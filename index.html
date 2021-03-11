@@ -1,30 +1,131 @@
 <!doctype HTML>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <title>PGCD viewer</title>
     <link href="style.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div>
+</head>
+
+<body>
+    <div class="row">
+        <div class="column">
+            <div>
+                <label>Nombre de cases horizontales</label>
+                <input id="tx" type="number" min=1 max=10000 value=50/>
+            </div>
+            <div>
+                <label>Nombre de cases verticales</label>
+                <input id="ty" type="number" min=1 max=10000 value=50/>
+            </div>
+            <div>
+                <label>Taille des cases</label>
+                <input id="tc" type="number" min=1 max=100/>
+            </div>
+        </div>
+        <div class="column">
+            <div>
+                <label>couleur des cases :</label>
+                <input type="color" id="cl_case" value="#000000">
+            </div>
+            <div>
+                <label>couleur du background :</label>
+                <input type="color" id="cl_bg" value="#ffffff">
+            </div>
+        </div>
+        <div class="column">
+            <button onclick="create();">Create !</button>
+        </div>
     </div>
     <div>
-      <canvas id="canvas"></canvas>
+        <canvas id="canvas"></canvas>
     </div>
-  </body>
+</body>
 <html>
 <script>
-function pgcd(a,b){
-  if(b==0){
-    return a;
-  }
-  return pgcd(b, a%b);
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
 
-}
+    function pgcd(a, b) {
+        if (b == 0) {
+            return a;
+        }
+        return pgcd(b, a % b);
 
-function create(){
-  var can = document.getElementById("canvas");
-  var ctx = canvas.getContext("2d");
-}
-  
+    }
+
+    function create() {
+        var can = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var tx = parseInt(document.getElementById("tx").value);
+        var ty = parseInt(document.getElementById("ty").value);
+        var tc = parseInt(document.getElementById("tc").value);
+        var cl_bge = document.getElementById("cl_bg").value;
+        var cl_c = document.getElementById("cl_case").value;
+        console.log(cl_bg, cl_cas);
+        var itx = tx * tc;
+        var ity = ty * tc;
+        var maxe = tx;
+        if (ty > maxe) {
+            maxe = ty;
+        }
+        can.width = itx;
+        can.height = ity;
+        ctx.fill = cl_bg;
+        ctx.fillRect(0, 0, tx, ty);
+        for (x = 0; x < tx; x++) {
+            for (y = 0; y < ty; y++) {
+                var pp = pgcd(x, y);
+                var p = parseFloat(pp) / parseFloat(maxe);
+                var cl_bg = hexToRgb(cl_bge);
+                var cl_cas = hexToRgb(cl_c);
+                var c = {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                };
+                if (cl_bg.r <= 127) {
+                    c.r = cl_bg.r + parseInt((cl_cas.r - cl_bg.r) * p);
+                    if (c.r > 255) {
+                        c.r = 255;
+                    }
+                } else {
+                    c.r = cl_bg.r - parseInt((cl_cas.r - cl_bg.r) * p);
+                    if (c.r < 0) {
+                        c.r = 0;
+                    }
+                }
+                if (cl_bg.g <= 127) {
+                    c.g = cl_bg.g + parseInt((cl_cas.g - cl_bg.g) * p);
+                    if (c.g > 255) {
+                        c.g = 255;
+                    }
+                } else {
+                    c.g = cl_bg.g - parseInt((cl_cas.g - cl_bg.g) * p);
+                    if (c.g < 0) {
+                        c.g = 0;
+                    }
+                }
+                if (cl_bg.b <= 127) {
+                    c.b = cl_bg.b + parseInt((cl_cas.b - cl_bg.b) * p);
+                    if (c.b > 255) {
+                        c.b = 255;
+                    }
+                } else {
+                    c.b = cl_bg.b - parseInt((cl_cas.b - cl_bg.b) * p);
+                    if (c.b < 0) {
+                        c.b = 0;
+                    }
+                }
+                ctx.fillStyle = "rgb(" + c.r + "," + c.g + "," + c.b + ")";
+                ctx.fillRect(x * tc, y * tc, tc, tc);
+            }
+        }
+    }
 </script>
